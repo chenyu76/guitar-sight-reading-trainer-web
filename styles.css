@@ -12,6 +12,8 @@
   /* 指板特定变量 */
   --string-color: #888;
   --fret-color: #999;
+
+  --card-radius: 20px;
 }
 
 body {
@@ -95,6 +97,9 @@ svg {
   flex-direction: column;
   overflow: hidden;
   /* 防止溢出 */
+  border-top-left-radius: var(--card-radius);
+  border-top-right-radius: var(--card-radius);
+  box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.03);
 }
 
 /* === 模式 A: 滚轮选择器样式 === */
@@ -102,8 +107,8 @@ svg {
   text-align: center;
   background: #fff;
   padding: 10px 0 5px 0;
-  border-top-left-radius: 20px;
-  border-top-right-radius: 20px;
+  border-top-left-radius: var(--card-radius);
+  border-top-right-radius: var(--card-radius);
   box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.03);
   z-index: 5;
 }
@@ -246,12 +251,14 @@ svg {
   padding: 10px;
   color: #666;
   font-size: 0.9rem;
-  background: var(--bg);
+  background: var(--card-bg);
+  border-top-left-radius: var(--card-radius);
+  border-top-right-radius: var(--card-radius);
 }
 
 #fretboard-viewport {
   flex: 1;
-  background: var(--bg);
+  background: var(--card-bg);
   overflow-x: auto;
   /* 允许横向滑动 */
   overflow-y: hidden;
