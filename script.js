@@ -71,14 +71,13 @@ window.onload = () => {
 
 // --- 滚轮逻辑 ---
 function initPicker() {
-  // 弦 1-6
+  // 生成内容
   for (let i = 1; i <= 6; i++) {
     const li = document.createElement('li');
     li.className = 'picker-item';
     li.innerText = i;
     colString.appendChild(li);
   }
-  // 品 0-15
   for (let i = 0; i <= 15; i++) {
     const li = document.createElement('li');
     li.className = 'picker-item';
@@ -86,9 +85,41 @@ function initPicker() {
     colFret.appendChild(li);
   }
 
+  // 监听原生滚动（主要用于触摸和惯性）
   colString.addEventListener('scroll', handleScroll);
   colFret.addEventListener('scroll', handleScroll);
+
+  // 接管鼠标滚轮，强制一次一格
+  addWheelControl(colString);
+  addWheelControl(colFret);
+
   updateSelectionDisplay();
+}
+
+// 滚轮修复函数
+function addWheelControl(element) {
+  element.addEventListener('wheel', (e) => {
+    e.preventDefault(); // 1. 阻止浏览器默认的大跨度滚动
+
+    const itemHeight = 50; // 必须和 CSS 中的 --item-height 一致
+
+    // 2. 判断滚动方向 (deltaY > 0 是向下滚)
+    const direction = e.deltaY > 0 ? 1 : -1;
+
+    // 3. 计算当前大概在第几格
+    const currentIndex = Math.round(element.scrollTop / itemHeight);
+
+    // 4. 计算目标格子
+    let targetIndex = currentIndex + direction;
+
+    // 5. 防止越界
+    // 实际上 scrollTo 会自己处理越界，但手动限制更安全
+    // 列表长度需要减去 padding 造成的视觉干扰，这里直接用 scrollHeight
+    // 估算也行， 但因为用了 scrollTo，浏览器会自动处理溢出，所以直接滚就行。
+
+    // 6. 平滑滚动到目标位置
+    element.scrollTo({top : targetIndex * itemHeight, behavior : 'smooth'});
+  }, {passive : false}); // 关键：passive: false 允许我们调用 preventDefault
 }
 
 function handleScroll(e) {
